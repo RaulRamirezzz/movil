@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { LoginTemplate } from "./src/components/templates/LoginTemplate";
+import { SplashScreen } from "./src/components/organismos/SplashScreen";
+import { BillTable } from "./src/components/organismos/tablas/BillTable";
+import { DeliveryTable } from "./src/components/organismos/tablas/SelectedBillTable";
+import { Header } from "./src/components/organismos/Header";
+import { BillTemplate } from "./src/components/templates/BillTemplate";
+import { BillonwayTemplate } from "./src/components/templates/BillonwayTemplate";
+import { AuthProvider } from "./src/context/AuthContext";
+import { ProtectedRoute } from "./src/hooks/ProtectedRoute";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return <SplashScreen onFinish={() => setIsLoading(false)} />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthProvider>
+      <NavigationContainer>
+        <ProtectedRoute />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
