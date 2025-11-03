@@ -1,12 +1,10 @@
-export async function validateDeliveryService(
+export async function validateQRService(
     token, 
     consecutivo, 
-    latitud, 
-    longitud, 
-    fecha
+    uuid
 ) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/entregar", {
+      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/qr", {
          method: "POST",
          headers: { 
             "Content-Type": "application/json",
@@ -14,9 +12,7 @@ export async function validateDeliveryService(
         },
         body: JSON.stringify({
             consecutivo,
-            longitud,
-            latitud,
-            fecha
+            uuid,
         }),
       });
 
