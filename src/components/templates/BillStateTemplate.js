@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import { Header } from '../organismos/Header'; 
-import { BillonwayTable } from '../organismos/tablas/SelectedBillTable';
 import { BillonrouteTable } from '../organismos/tablas/RouteBillTable';
 import { useAuth } from '../../context/AuthContext';
-import { sendSelectedDocs } from '../../store/docSelectService';
 import { useNavigation } from '@react-navigation/native';
-import useLocation from '../../hooks/useLocation';
+import { loadSelectedDocs } from '../../store/loadSelectedService';
+import { useEffect } from 'react';
 
 import {
     View,
@@ -16,33 +15,33 @@ import {
 } from 'react-native';
 
 export function BillStateTemplate() {
-    const [selectedDocs, setSelectedDocs] = useState([]);
     const { user } = useAuth();
     const navigation = useNavigation();
-    const { latitude, longitude, errorMsg } = useLocation();
+    const [routeConsecutivo, setRouteConsecutivo] = useState(null);
 
-    const handleSubmit = async () => {
-        if (selectedDocs.length === 0) {
-            Alert.alert('Para continuar por favor indica el documento a entregar');
-            return;
+    useEffect(() => {
+      const fetchDocs = async () => {
+        const result = await loadSelectedDocs(user.Token);
+        if (result.success) {
+          // Busca el documento con estado "En ruta" o "en ruta"
+          const docEnRuta = result.documentos.find(
+            (doc) => 
+              doc.estadoDocumento === 'En ruta' ||
+              doc.estadoDocumento === 'en ruta'
+          );
+
+          if (docEnRuta) {
+            setRouteConsecutivo(docEnRuta.consecutivo);
+          } else {
+            Alert.alert('Aviso', 'No hay documentos en ruta disponibles.');
+          }
+        } else {
+          Alert.alert('Error', result.descripcion || 'Error al cargar documentos.');
         }
-        const result = await sendSelectedDocs(selectedDocs, user.Token);
-        console.log(result);
-    };
+      };
 
-    const handleShowCoords = () => {
-      if (errorMsg) {
-        Alert.alert("Error", errorMsg);
-        return;
-      }
-
-      if (latitude && longitude) {
-        console.log("Latitud:", latitude, "Longitud:", longitude);
-        Alert.alert("Coordenadas", `Lat: ${latitude}\nLng: ${longitude}`);
-      } else {
-        Alert.alert("Obteniendo ubicación...", "Por favor espera un momento.");
-      }
-    };
+      fetchDocs();
+    }, [user.token]);
 
     return (
         <View style={styles.container}>
@@ -51,11 +50,19 @@ export function BillStateTemplate() {
               <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
                               {"Documento en ruta"}
               </Text>
-              <BillonrouteTable onSelectionChange={setSelectedDocs}/> 
+              <BillonrouteTable /> 
               <View style={styles.buttonContainer}>
                 <Button 
                     title="Comenzar" 
-                    onPress={handleShowCoords}
+                    onPress={() => {
+                      if (!routeConsecutivo) {
+                        Alert.alert('Error', 'No se encontró un documento en ruta.');
+                        return;
+                      }
+                      // Navegar a QRTemplate y pasar el consecutivo
+                      console.log("Primer doc en ruta:", routeConsecutivo);
+                      navigation.navigate('QRTemplate', { consecutivo: routeConsecutivo });
+                    }}
                 />
               </View>
             </View>

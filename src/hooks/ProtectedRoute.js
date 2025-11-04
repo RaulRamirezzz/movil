@@ -21,7 +21,7 @@ export function ProtectedRoute(){
                 <>
                     {/*<Stack.Screen name="BillTemplate" component={BillTemplate} />*/}
                     {/*<Stack.Screen name="BillonwayTemplate" component={BillonwayTemplate} />*/}
-                    {/*<Stack.Screen name="BillStateTemplate" component={BillStateTemplate} />*/}
+                    <Stack.Screen name="BillStateTemplate" component={BillStateTemplate} />
                     <Stack.Screen name="QRTemplate" component={QRTemplate} />
                 </>
             )}

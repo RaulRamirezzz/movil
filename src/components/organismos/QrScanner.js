@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, Alert, Animated, Easing } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import { validateQRService } from "../../store/validateQRService";
+import { useAuth } from "../../context/AuthContext";
 
 export function QrScanner({ onSuccess }) {
   const [permission, requestPermission] = useCameraPermissions();
@@ -46,7 +48,6 @@ export function QrScanner({ onSuccess }) {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-
     try {
       // Buscar id
       const match = data.match(/id=([0-9a-fA-F-]+)(?=efa&re)/);
@@ -54,7 +55,20 @@ export function QrScanner({ onSuccess }) {
       if (match && match[1]) {
         const uuid = match[1];
         console.log("UUID extraído:", uuid);
-        //onSuccess(uuid); // Enviar al template
+        validateQRService(
+          useAuth().user.Token,
+          "12345", // ejemplo de consecutivo
+          uuid
+        ).then((result) => {
+          if (result.success) {
+            Alert.alert("Éxito", result.descripcion);
+            onSuccess(uuid); // Enviar al template
+          } else {
+            Alert.alert("Error", result.descripcion);
+            setScanned(false);
+          }
+        });
+        
       } else {
         Alert.alert("QR no válido", "No se encontró el UUID en el código escaneado.");
         setScanned(false);
