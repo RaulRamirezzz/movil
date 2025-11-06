@@ -4,11 +4,12 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { validateQRService } from "../../store/validateQRService";
 import { useAuth } from "../../context/AuthContext";
 
-export function QrScanner({ onSuccess }) {
+export function QrScanner({ onSuccess,consecutivo }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const cameraRef = useRef(null);
   const scanAnim = useRef(new Animated.Value(0)).current;
+  const { user } = useAuth();
 
   // Animación de línea de escaneo
   const startScanAnimation = () => {
@@ -54,15 +55,18 @@ export function QrScanner({ onSuccess }) {
 
       if (match && match[1]) {
         const uuid = match[1];
+        console.log("Token:", user.Token);
+        console.log("Consecutivo:", consecutivo);
         console.log("UUID extraído:", uuid);
         validateQRService(
-          useAuth().user.Token,
-          "12345", // ejemplo de consecutivo
+          user.Token,
+          consecutivo,
           uuid
         ).then((result) => {
           if (result.success) {
             Alert.alert("Éxito", result.descripcion);
             onSuccess(uuid); // Enviar al template
+            console.log(result.descripcion);
           } else {
             Alert.alert("Error", result.descripcion);
             setScanned(false);

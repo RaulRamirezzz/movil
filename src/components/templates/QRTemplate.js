@@ -6,32 +6,30 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import useLocation from "../../hooks/useLocation";
 import { QrScanner } from "../organismos/QrScanner";
 import { validateDeliveryService } from "../../store/validateDeliveryService";
-import { validateQRService } from "../../store/validateQRService";
-
+import { getFormattedDate } from '../../utils/getFormattedDate';
 
 export function QRTemplate() {
   const { user } = useAuth();
   const navigation = useNavigation();
-  const { latitude, longitude, errorMsg } = useLocation();
   const route = useRoute();
   const consecutivo = route.params?.consecutivo;
-
-
-  const handleShowCoords = () => {
-      if (errorMsg) {
-          Alert.alert("Error", errorMsg);
-          return;
-      }
+  const { latitude, longitude, errorMsg } = useLocation();
   
-      if (latitude && longitude) {
-          console.log("Latitud:", latitude, "Longitud:", longitude);
-          Alert.alert("Coordenadas", `Lat: ${latitude}\nLng: ${longitude}`);
-      } else {
-          Alert.alert("Obteniendo ubicación...", "Por favor espera un momento.");
-      }
-    };
+
+  const consolesLogs =() =>{
+    const fecha = getFormattedDate();
+
+    console.log("Latitud:", latitude);
+    console.log("Longitud:", longitude);
+    console.log("Consecutivo en QRTemplate:", consecutivo);
+    console.log("User:", user.Token);
+    console.log("fecha:", fecha);
+  }
 
   const handleQrSuccess = async (uuid) => {
+    const fecha = getFormattedDate();
+    console.log("UUID recibido en QRTemplate:", uuid);
+
     if (!latitude || !longitude) {
       Alert.alert("Ubicación no disponible", "Por favor, espera un momento.");
       return;
@@ -39,13 +37,11 @@ export function QRTemplate() {
 
     try {
       const result = await validateDeliveryService(
-        user.token,
-        "12345", // ejemplo de consecutivo
-        uuid,
-        latitude,
+        user.Token,
+        consecutivo,
         longitude,
-        "5",
-        new Date().toISOString()
+        latitude,
+        fecha
       );
 
       if (result.success) {
@@ -64,8 +60,9 @@ export function QRTemplate() {
       <Header />
       <View style={styles.ContainerTable}>
         <Text style={styles.title}>"Escanee el documento {consecutivo} para continuar con el proceso" </Text>
-        <QrScanner onSuccess={handleQrSuccess} />
+        <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo}/>
         <Button title="Regresar" 
+
             onPress={() => navigation.goBack()}
         />
       </View>
