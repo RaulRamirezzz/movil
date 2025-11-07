@@ -41,7 +41,7 @@ export function BillStateTemplate() {
       };
 
       fetchDocs();
-    }, [user.token]);
+    }, [user.Token]);
 
     return (
         <View style={styles.container}>
