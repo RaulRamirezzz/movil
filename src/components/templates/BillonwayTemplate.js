@@ -40,7 +40,7 @@ export function BillonwayTemplate() {
             <Header />
             <View style={styles.ContainerTable}>
               <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
-                              {"Documentos seleccionados"}
+                              {"Documentos Asignados"}
               </Text>
               <BillonwayTable onSelectionChange={setSelectedDocs}/> 
               <View style={styles.buttonContainer}>

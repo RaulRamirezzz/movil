@@ -55,7 +55,7 @@ export function BillTable({onSelectionChange}) {
     <View style={styles.container}>
       <View style={[styles.row, styles.header]}>
         
-        <Text style={styles.headerCell}>Factura</Text>
+        <Text style={styles.headerCell}>Documento</Text>
         <Text style={styles.headerCell}>Cliente</Text>
         <Text style={styles.headerCell}>Fecha</Text>
       </View>

@@ -31,7 +31,13 @@ export function BillonrouteTable() {
         <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>
           {item.fechaDocumento.split("T")[0]}
         </Text>
-        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.estadoDocumento}</Text>
+        <Text style={styles.cell}>
+          {isEnRuta ? (
+            <Text style={{ color: "red", fontWeight: "bold" }}>{item.estadoDocumento}</Text>
+            ) : (
+          item.estadoDocumento
+          )}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -39,7 +45,7 @@ export function BillonrouteTable() {
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.header]}>
-        <Text style={styles.headerCell}>Factura</Text>
+        <Text style={styles.headerCell}>Documento</Text>
         <Text style={styles.headerCell}>Cliente</Text>
         <Text style={styles.headerCell}>Fecha</Text>
         <Text style={styles.headerCell}>Estado</Text>
@@ -67,13 +73,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
-  /*
+  
   rowEnRuta: {
     backgroundColor: "#BBDEFB",
-  },*/
+  },
   textEnRuta: {
     color: "#0D47A1",
     fontWeight: "bold",
+
   },
   header: {
     backgroundColor: "#2196F3",

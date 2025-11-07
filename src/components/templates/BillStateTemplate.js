@@ -53,7 +53,7 @@ export function BillStateTemplate() {
               <BillonrouteTable /> 
               <View style={styles.buttonContainer}>
                 <Button 
-                    title="Comenzar" 
+                    title="Entregar" 
                     onPress={() => {
                       if (!routeConsecutivo) {
                         Alert.alert('Error', 'No se encontró un documento en ruta.');

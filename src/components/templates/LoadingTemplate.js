@@ -28,12 +28,15 @@ export function LoadingTemplate() {
           );
           // Si exiiste un documento en ruta, navega a BillStateTemplate, si no a BillonwayTemplate
           if (docEnRuta) {
+            Alert.alert('Aviso', 'Ya existe un documento en ruta.');
             navigation.navigate("BillStateTemplate");
           } else {
+            Alert.alert('Aviso', 'No hay documentos en ruta, por favor seleccione un documento a entregar.');
             navigation.navigate("BillonwayTemplate")
           }
           // Si no hay documentos en cargados, navega a BillTemplate
         } else {
+          Alert.alert('Aviso', 'No hay documentos seleccionados, por favor seleccione al menos un documento.');
           navigation.navigate("BillTemplate")
         }
       };
