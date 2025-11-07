@@ -4,7 +4,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { validateQRService } from "../../store/validateQRService";
 import { useAuth } from "../../context/AuthContext";
 
-export function QrScanner({ onSuccess,consecutivo }) {
+export function QrScanner({ consecutivo }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const cameraRef = useRef(null);

@@ -26,9 +26,9 @@ export function QRTemplate() {
     console.log("fecha:", fecha);
   }
 
-  const handleQrSuccess = async (uuid) => {
+  const handleQrSuccess = async () => {
     const fecha = getFormattedDate();
-    console.log("UUID recibido en QRTemplate:", uuid);
+    console.log("UUID recibido en QRTemplate:");
 
     if (!latitude || !longitude) {
       Alert.alert("Ubicación no disponible", "Por favor, espera un momento.");
@@ -60,9 +60,12 @@ export function QRTemplate() {
       <Header />
       <View style={styles.ContainerTable}>
         <Text style={styles.title}>"Escanee el documento {consecutivo} para continuar con el proceso" </Text>
-        <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo}/>
+        <QrScanner consecutivo={consecutivo}/>
+        <Button title="Validar" 
+            onPress={() => handleQrSuccess()}
+        />
+        <View style={{ height: 16 }} />
         <Button title="Regresar" 
-
             onPress={() => navigation.goBack()}
         />
       </View>

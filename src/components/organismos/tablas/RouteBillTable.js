@@ -1,34 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { loadSelectedDocs } from "../../../store/loadSelectedService";
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from "../../../context/AuthContext";
 
 export function BillonrouteTable() {
-    const [data, setData] = useState([]);
-    const { user } = useAuth();
+  const [data, setData] = useState([]);
+  const { user } = useAuth();
 
-    useEffect(() => {
-      async function loadSelDocs() {
-        const result = await loadSelectedDocs(user.Token);
-        if (result.success) {
-          setData(result.documentos);
-        } else {
-          console.log("Error al cargar documentos:", result.descripcion);
-        }
+  useEffect(() => {
+    async function loadSelDocs() {
+      const result = await loadSelectedDocs(user.Token);
+      if (result.success) {
+        setData(result.documentos);
+      } else {
+        console.log("Error al cargar documentos:", result.descripcion);
       }
-      loadSelDocs();
-    }, []);
+    }
+    loadSelDocs();
+  }, []);
 
-    const renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity style={styles.row}>
-                <Text style={styles.cell}>{item.consecutivo}</Text>
-                <Text style={styles.cell}>{item.nombreCliente}</Text>
-                <Text style={styles.cell}>{item.fechaDocumento.split("T")[0]}</Text>
-                <Text style={styles.cell}>{item.estadoDocumento}</Text>
-            </TouchableOpacity>
-        );
-    };
+  const renderItem = ({ item }) => {
+    const isEnRuta = item.estadoDocumento === "En ruta";
+
+    return (
+      <TouchableOpacity
+        style={[styles.row, isEnRuta && styles.rowEnRuta]} 
+      >
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.consecutivo}</Text>
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.nombreCliente}</Text>
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>
+          {item.fechaDocumento.split("T")[0]}
+        </Text>
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.estadoDocumento}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -53,7 +59,6 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
     paddingHorizontal: 10,
-
   },
   row: {
     flexDirection: "row",
@@ -62,8 +67,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
-  rowSelected: {
-    backgroundColor: "#E3F2FD",
+  /*
+  rowEnRuta: {
+    backgroundColor: "#BBDEFB",
+  },*/
+  textEnRuta: {
+    color: "#0D47A1",
+    fontWeight: "bold",
   },
   header: {
     backgroundColor: "#2196F3",
