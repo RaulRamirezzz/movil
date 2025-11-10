@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
 import { useEffect } from 'react';
+import { CustomAlertExample } from '../moleculas/AlertCustom';
 
 import {
     View,
@@ -28,15 +29,15 @@ export function LoadingTemplate() {
           );
           // Si exiiste un documento en ruta, navega a BillStateTemplate, si no a BillonwayTemplate
           if (docEnRuta) {
-            Alert.alert('Aviso', 'Ya existe un documento en ruta.');
+            CustomAlertExample('Aviso', 'Hay documentos en ruta, por favor verifique el estado del documento.');
             navigation.navigate("BillStateTemplate");
           } else {
-            Alert.alert('Aviso', 'No hay documentos en ruta, por favor seleccione un documento a entregar.');
+            CustomAlertExample('Éxito', 'Documentos cargados correctamente.');
             navigation.navigate("BillonwayTemplate")
           }
           // Si no hay documentos en cargados, navega a BillTemplate
         } else {
-          Alert.alert('Aviso', 'No hay documentos seleccionados, por favor seleccione al menos un documento.');
+          CustomAlertExample('Error', 'No hay documentos cargados.');
           navigation.navigate("BillTemplate")
         }
       };

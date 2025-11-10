@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { View, StyleSheet, Button, Alert, Text } from "react-native";
+import { View, StyleSheet, Button, Alert, Text, ActivityIndicator } from "react-native";
 import { Header } from "../organismos/Header";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -14,6 +14,7 @@ export function QRTemplate() {
   const route = useRoute();
   const consecutivo = route.params?.consecutivo;
   const { latitude, longitude, errorMsg } = useLocation();
+  const [loading, setLoading] = useState(false);
   
 
   const consolesLogs =() =>{
@@ -36,6 +37,8 @@ export function QRTemplate() {
     }
 
     try {
+      setLoading(true);
+
       const result = await validateDeliveryService(
         user.Token,
         consecutivo,
@@ -52,6 +55,9 @@ export function QRTemplate() {
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo validar el documento.");
+    } finally {
+      setLoading(false);
+      consolesLogs();
     }
   };
 
@@ -60,7 +66,14 @@ export function QRTemplate() {
       <Header />
       <View style={styles.ContainerTable}>
         <Text style={styles.title}>"Escanee el documento {consecutivo} para continuar con la entrega" </Text>
-        <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo}/>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={styles.loadingText}>Validando entrega...</Text>
+          </View>
+        ) : (
+          <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo} />
+        )}
         <Button title="Regresar" 
             onPress={() => navigation.goBack()}
         />
