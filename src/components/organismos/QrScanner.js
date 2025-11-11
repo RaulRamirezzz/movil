@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Alert, Animated, Easing } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { validateQRService } from "../../store/validateQRService";
 import { useAuth } from "../../context/AuthContext";
+import { CustomAlert } from "../moleculas/AlertCustom";
 
 export function QrScanner({ onSuccess, consecutivo }) {
   const [permission, requestPermission] = useCameraPermissions();
@@ -64,11 +65,11 @@ export function QrScanner({ onSuccess, consecutivo }) {
           uuid
         ).then((result) => {
           if (result.success) {
-            Alert.alert("Éxito", result.descripcion);
+            CustomAlert.show("Éxito", result.descripcion);
             onSuccess(uuid); // Enviar al template
             console.log(result.descripcion);
           } else {
-            Alert.alert("Error", result.descripcion);
+            CustomAlert.show("Error", result.descripcion);
             setScanned(false);
           }
         });

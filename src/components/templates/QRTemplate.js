@@ -1,32 +1,37 @@
-import React, {useState} from "react";
-import { View, StyleSheet, Button, Alert, Text, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  Alert,
+  Text,
+} from "react-native";
 import { Header } from "../organismos/Header";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import useLocation from "../../hooks/useLocation";
 import { QrScanner } from "../organismos/QrScanner";
 import { validateDeliveryService } from "../../store/validateDeliveryService";
-import { getFormattedDate } from '../../utils/getFormattedDate';
-import { CustomAlert } from '../moleculas/AlertCustom';
+import { getFormattedDate } from "../../utils/getFormattedDate";
+import { CustomAlert } from "../moleculas/AlertCustom";
+import LottieView from "lottie-react-native";
 
 export function QRTemplate() {
   const { user } = useAuth();
   const navigation = useNavigation();
   const route = useRoute();
   const consecutivo = route.params?.consecutivo;
-  const { latitude, longitude, errorMsg } = useLocation();
+  const { latitude, longitude } = useLocation();
   const [loading, setLoading] = useState(false);
-  
 
-  const consolesLogs =() =>{
+  const consolesLogs = () => {
     const fecha = getFormattedDate();
-
     console.log("Latitud:", latitude);
     console.log("Longitud:", longitude);
     console.log("Consecutivo en QRTemplate:", consecutivo);
     console.log("User:", user.Token);
     console.log("fecha:", fecha);
-  }
+  };
 
   const handleQrSuccess = async (uuid) => {
     const fecha = getFormattedDate();
@@ -39,14 +44,10 @@ export function QRTemplate() {
 
     try {
       setLoading(true);
-
-      const result = await validateDeliveryService(
-        user.Token,
-        consecutivo,
-        longitude,
-        latitude,
-        fecha
-      );
+      const [result] = await Promise.all([
+        validateDeliveryService(user.Token, consecutivo, longitude, latitude, fecha),
+        new Promise((resolve) => setTimeout(resolve, 2000)), // ⏱ Espera mínima
+      ]);
 
       if (result.success) {
         Alert.alert("Éxito", result.descripcion);
@@ -66,18 +67,27 @@ export function QRTemplate() {
     <View style={styles.container}>
       <Header />
       <View style={styles.ContainerTable}>
-        <Text style={styles.title}>"Escanee el documento {consecutivo} para continuar con la entrega" </Text>
+        <Text style={styles.title}>
+          Escanee el documento {consecutivo} para continuar con la entrega
+        </Text>
+
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
+            <LottieView
+              source={require("../../assets/Loader.json")}
+              autoPlay
+              loop
+              style={{ width: 300, height: 300 }}
+            />
             <Text style={styles.loadingText}>Validando entrega...</Text>
           </View>
         ) : (
           <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo} />
         )}
-        <Button title="Regresar" 
-            onPress={() => navigation.goBack()}
-        />
+
+        {!loading && (
+          <Button title="Regresar" onPress={() => navigation.goBack()} />
+        )}
       </View>
     </View>
   );
@@ -101,4 +111,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 8,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#4F46E5",
+  },
 });
+
