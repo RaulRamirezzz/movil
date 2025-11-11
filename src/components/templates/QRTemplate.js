@@ -7,6 +7,7 @@ import useLocation from "../../hooks/useLocation";
 import { QrScanner } from "../organismos/QrScanner";
 import { validateDeliveryService } from "../../store/validateDeliveryService";
 import { getFormattedDate } from '../../utils/getFormattedDate';
+import { CustomAlert } from '../moleculas/AlertCustom';
 
 export function QRTemplate() {
   const { user } = useAuth();

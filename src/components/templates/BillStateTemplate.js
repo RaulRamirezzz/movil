@@ -1,73 +1,66 @@
-import React, {useState} from 'react';
-import { Header } from '../organismos/Header'; 
+import React, { useEffect, useState } from 'react';
+import { Header } from '../organismos/Header';
 import { BillonrouteTable } from '../organismos/tablas/RouteBillTable';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
-import { useEffect } from 'react';
-
-import {
-    View,
-    StyleSheet,
-    Button,
-    Alert,
-    Text,
-} from 'react-native';
+import { CustomAlert } from '../moleculas/AlertCustom';
+import { View, StyleSheet, Button, Alert, Text } from 'react-native';
 
 export function BillStateTemplate() {
-    const { user } = useAuth();
-    const navigation = useNavigation();
-    const [routeConsecutivo, setRouteConsecutivo] = useState(null);
+  const { user } = useAuth();
+  const navigation = useNavigation();
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const [docs, setDocs] = useState([]);
 
-    useEffect(() => {
-      const fetchDocs = async () => {
-        const result = await loadSelectedDocs(user.Token);
-        if (result.success) {
-          // Busca el documento con estado "En ruta" o "en ruta"
-          const docEnRuta = result.documentos.find(
-            (doc) => 
-              doc.estadoDocumento === 'En ruta' ||
-              doc.estadoDocumento === 'en ruta'
-          );
+  useEffect(() => {
+    const fetchDocs = async () => {
+      const result = await loadSelectedDocs(user.Token);
+      if (result.success) {
+        setDocs(result.documentos);
+      } else {
+        Alert.alert('Error', result.descripcion || 'Error al cargar documentos.');
+      }
+    };
+    fetchDocs();
+  }, [user.Token]);
 
-          if (docEnRuta) {
-            setRouteConsecutivo(docEnRuta.consecutivo);
-          } else {
-            Alert.alert('Aviso', 'No hay documentos en ruta disponibles.');
-          }
-        } else {
-          Alert.alert('Error', result.descripcion || 'Error al cargar documentos.');
-        }
-      };
+  const handleEntregar = () => {
+    if (!selectedDoc) {
+      CustomAlert.show('Error', 'Por favor selecciona un documento.');
+      return;
+    }
 
-      fetchDocs();
-    }, [user.Token]);
+    // Buscar el documento seleccionado en la lista
+    const doc = docs.find(d => d.consecutivo === selectedDoc);
 
-    return (
-        <View style={styles.container}>
-            <Header />
-            <View style={styles.ContainerTable}>
-              <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
-                              {"Documento en ruta"}
-              </Text>
-              <BillonrouteTable /> 
-              <View style={styles.buttonContainer}>
-                <Button 
-                    title="Entregar" 
-                    onPress={() => {
-                      if (!routeConsecutivo) {
-                        Alert.alert('Error', 'No se encontró un documento en ruta.');
-                        return;
-                      }
-                      // Navegar a QRTemplate y pasar el consecutivo
-                      console.log("Primer doc en ruta:", routeConsecutivo);
-                      navigation.navigate('QRTemplate', { consecutivo: routeConsecutivo });
-                    }}
-                />
-              </View>
-            </View>
+    // Validar que esté en ruta
+    if (!doc || doc.estadoDocumento !== 'En ruta') {
+      CustomAlert.show('Error', 'Solo puedes entregar documentos que estén en ruta.');
+      return;
+    }
+
+    // Si está en ruta, proceder
+    console.log('Documento en ruta listo para entrega:', doc.consecutivo);
+    navigation.navigate('QRTemplate', { consecutivo: doc.consecutivo });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header />
+      <View style={styles.ContainerTable}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
+          Documento en ruta
+        </Text>
+
+        <BillonrouteTable onSelectionChange={setSelectedDoc} />
+
+        <View style={styles.buttonContainer}>
+          <Button title="Entregar" onPress={handleEntregar} />
         </View>
-    );
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -77,12 +70,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 16,
-    width: "40%",
-    alignSelf: "center",
+    width: '40%',
+    alignSelf: 'center',
   },
   ContainerTable: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 16,
-  }
+    width: "100%",
+    height: "80%",
+  },
 });

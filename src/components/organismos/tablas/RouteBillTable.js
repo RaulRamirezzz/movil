@@ -1,41 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { loadSelectedDocs } from "../../../store/loadSelectedService";
 import { useAuth } from "../../../context/AuthContext";
 
-export function BillonrouteTable() {
+export function BillonrouteTable({ onSelectionChange }) {
+  const [selected, setSelected] = useState(null);
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
 
-  useEffect(() => {
-    async function loadSelDocs() {
+  const fetchDocs = useCallback(async () => {
+    try {
       const result = await loadSelectedDocs(user.Token);
       if (result.success) {
         setData(result.documentos);
       } else {
         console.log("Error al cargar documentos:", result.descripcion);
       }
+    } catch (error) {
+      console.log("Error en la carga:", error);
     }
-    loadSelDocs();
-  }, []);
+  }, [user.Token]);
+
+  useEffect(() => {
+    fetchDocs();
+  }, [fetchDocs]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDocs();
+    setRefreshing(false);
+  };
+
+  const toggleSelect = (id) => {
+    const newSelection = selected === id ? null : id;
+    setSelected(newSelection);
+    onSelectionChange && onSelectionChange(newSelection);
+  };
 
   const renderItem = ({ item }) => {
+    const isSelected = selected === item.consecutivo;
     const isEnRuta = item.estadoDocumento === "En ruta";
 
     return (
       <TouchableOpacity
-        style={[styles.row, isEnRuta && styles.rowEnRuta]} 
+        style={[
+          styles.row,
+          isSelected && styles.rowSelected,
+          isEnRuta && styles.rowEnRuta,
+        ]}
+        onPress={() => toggleSelect(item.consecutivo)}
       >
-        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.consecutivo}</Text>
-        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>{item.nombreCliente}</Text>
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>
+          {item.consecutivo}
+        </Text>
+        <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>
+          {item.nombreCliente}
+        </Text>
         <Text style={[styles.cell, isEnRuta && styles.textEnRuta]}>
           {item.fechaDocumento.split("T")[0]}
         </Text>
         <Text style={styles.cell}>
           {isEnRuta ? (
-            <Text style={{ color: "red", fontWeight: "bold" }}>{item.estadoDocumento}</Text>
-            ) : (
-          item.estadoDocumento
+            <Text style={{ color: "red", fontWeight: "bold" }}>
+              {item.estadoDocumento}
+            </Text>
+          ) : (
+            item.estadoDocumento
           )}
         </Text>
       </TouchableOpacity>
@@ -56,6 +87,9 @@ export function BillonrouteTable() {
         renderItem={renderItem}
         keyExtractor={(item) => item.consecutivo}
         style={{ maxHeight: 500 }}
+        extraData={selected}
+        refreshing={refreshing} 
+        onRefresh={onRefresh}
       />
     </View>
   );
@@ -73,14 +107,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
-  
-  rowEnRuta: {
-    backgroundColor: "#BBDEFB",
+  rowSelected: {
+    backgroundColor: "#E3F2FD",
   },
   textEnRuta: {
     color: "#0D47A1",
     fontWeight: "bold",
-
   },
   header: {
     backgroundColor: "#2196F3",

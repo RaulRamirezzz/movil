@@ -4,12 +4,12 @@ import { BillTable } from '../organismos/tablas/BillTable';
 import { useAuth } from '../../context/AuthContext';
 import { sendSelectedDocs } from '../../store/docSelectService';
 import { useNavigation } from '@react-navigation/native';
+import { CustomAlert } from '../moleculas/AlertCustom';
 
 import {
     View,
     StyleSheet,
     Button,
-    Alert,
     Text,
 } from 'react-native';
 
@@ -20,11 +20,11 @@ export function BillTemplate() {
 
     const handleSubmit = async () => {
         if (selectedDocs.length === 0) {
-            Alert.alert('Lista vacia');
+            CustomAlert.show('¡Error!', 'Lista vacia, por favor selecciona un documento');
             return;
         }
         else {
-            Alert.alert('Para continuar por favor indica el documento a entregar');
+            CustomAlert.show('Aviso', 'Para continuar por favor indica el documento a entregar');
             navigation.navigate("BillonwayTemplate")
 
         }
@@ -44,7 +44,7 @@ export function BillTemplate() {
                 <Button 
                     title="Entregar" 
                     onPress={() => {
-                        
+                    
                         handleSubmit();
                         
                     }}
@@ -69,5 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,
+    width: "100%",
+    height: "80%",
   }
 });

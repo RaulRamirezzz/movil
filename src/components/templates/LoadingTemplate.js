@@ -3,13 +3,12 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
 import { useEffect } from 'react';
-import { CustomAlertExample } from '../moleculas/AlertCustom';
+import { CustomAlert } from '../moleculas/AlertCustom';
+import LottieView from 'lottie-react-native';
 
 import {
     View,
     StyleSheet,
-    Button,
-    Alert,
     Text,
 } from 'react-native';
 
@@ -29,15 +28,15 @@ export function LoadingTemplate() {
           );
           // Si exiiste un documento en ruta, navega a BillStateTemplate, si no a BillonwayTemplate
           if (docEnRuta) {
-            CustomAlertExample('Aviso', 'Hay documentos en ruta, por favor verifique el estado del documento.');
+            //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
             navigation.navigate("BillStateTemplate");
           } else {
-            CustomAlertExample('Éxito', 'Documentos cargados correctamente.');
+            //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
             navigation.navigate("BillonwayTemplate")
           }
           // Si no hay documentos en cargados, navega a BillTemplate
         } else {
-          CustomAlertExample('Error', 'No hay documentos cargados.');
+          //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
           navigation.navigate("BillTemplate")
         }
       };
@@ -46,17 +45,21 @@ export function LoadingTemplate() {
     }, [user.Token]);
 
     return (
-        <View style={styles.container}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
-                            {"Cargando..."}
-            </Text>
-        </View>
+      <View style={styles.container}>
+        <LottieView
+          source={require("../../assets/Loader.json")}
+          autoPlay
+          loop
+          style={{ width: 300, height: 300 }}
+        />
+      </View>
     );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

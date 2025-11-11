@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Checkbox from "expo-checkbox";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { chargeDocs } from "../../../store/docService";
 
 
 export function BillTable({onSelectionChange}) {
-    const [selected, setSelected] = useState([]);
-    const [data, setData] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-      async function loadDocs() {
-        const result = await chargeDocs();
-        if (result.success) {
-          setData(result.documentos);
-        } else {
-          console.log("Error al cargar documentos:", result.descripcion);
-        }
+  const fetchDocs = useCallback(async () => {
+    try {
+      const result = await chargeDocs();
+      if (result.success) {
+        setData(result.documentos);
+      } else {
+        console.log("Error al cargar documentos:", result.descripcion);
       }
-      loadDocs();
-    }, []);
+    } catch (error) {
+      console.log("Error en la carga:", error);
+    }
+  }, [user.Token]);
+
+  useEffect(() => {
+    fetchDocs();
+  }, [fetchDocs]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDocs();
+    setRefreshing(false);
+  };
 
     const toggleSelect = (id) => {
       let updatedSelection;
@@ -65,6 +77,8 @@ export function BillTable({onSelectionChange}) {
         renderItem={renderItem}
         keyExtractor={(item) => item.consecutivo}
         style={{ maxHeight: 500 }}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
       />
     </View>
   );

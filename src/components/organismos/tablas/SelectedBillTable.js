@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Checkbox from "expo-checkbox";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { loadSelectedDocs } from "../../../store/loadSelectedService";
@@ -7,19 +7,31 @@ import { useAuth } from '../../../context/AuthContext';
 export function BillonwayTable({onSelectionChange}) {
     const [selected, setSelected] = useState(null);
     const [data, setData] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
     const { user } = useAuth();
 
-    useEffect(() => {
-      async function loadSelDocs() {
-        const result = await loadSelectedDocs(user.Token);
-        if (result.success) {
-          setData(result.documentos);
-        } else {
-          console.log("Error al cargar documentos:", result.descripcion);
-        }
+  const fetchDocs = useCallback(async () => {
+    try {
+      const result = await loadSelectedDocs(user.Token);
+      if (result.success) {
+        setData(result.documentos);
+      } else {
+        console.log("Error al cargar documentos:", result.descripcion);
       }
-      loadSelDocs();
-    }, []);
+    } catch (error) {
+      console.log("Error en la carga:", error);
+    }
+  }, [user.Token]);
+
+  useEffect(() => {
+    fetchDocs();
+  }, [fetchDocs]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDocs();
+    setRefreshing(false);
+  };
 
     const toggleSelect = (id) => {
       const newSelection = selected === id ? null : id;
@@ -61,6 +73,8 @@ export function BillonwayTable({onSelectionChange}) {
         renderItem={renderItem}
         keyExtractor={(item) => item.consecutivo}
         style={{ maxHeight: 500 }}
+        refreshing={refreshing}  
+        onRefresh={onRefresh} 
       />
     </View>
   );

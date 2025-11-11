@@ -2,6 +2,7 @@ import Zegnal from "../../assets/zegnal.png"
 import React, { useState, useEffect, useRef } from 'react';
 import { loginAuth } from "../../store/authService";
 import { useAuth} from "../../context/AuthContext";
+import { CustomAlert } from '../moleculas/AlertCustom';
 
 import {
     View,
@@ -76,9 +77,8 @@ export function LoginTemplate() {
         const result = await loginAuth(number, password);
         if (result.success) {
             login(result);
-            Alert.alert("Bienvenido", `Hola ${result.Nombre} (${result.Rol})`);
         } else {
-            Alert.alert("Error", result.Descripcion);
+            CustomAlert.show("Error", result.Descripcion);
         }
     };
 

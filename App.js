@@ -11,6 +11,7 @@ import { BillonwayTemplate } from "./src/components/templates/BillonwayTemplate"
 import { AuthProvider } from "./src/context/AuthContext";
 import { ProtectedRoute } from "./src/hooks/ProtectedRoute";
 import { NavigationContainer } from "@react-navigation/native";
+import { CustomAlertProvider } from "./src/components/moleculas/AlertCustom";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,9 +22,11 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <ProtectedRoute />
-      </NavigationContainer>
+      <CustomAlertProvider>
+        <NavigationContainer>
+          <ProtectedRoute />
+        </NavigationContainer>
+      </CustomAlertProvider>
     </AuthProvider>
   );
 }

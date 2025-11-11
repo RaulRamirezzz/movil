@@ -5,12 +5,12 @@ import { BillStateTemplate } from './BillStateTemplate';
 import { useAuth } from '../../context/AuthContext';
 import { startRouteService } from '../../store/startRouteService';
 import { useNavigation } from '@react-navigation/native';
+import { CustomAlert } from '../moleculas/AlertCustom';
 
 import {
     View,
     StyleSheet,
     Button,
-    Alert,
     Text,
 } from 'react-native';
 
@@ -21,15 +21,13 @@ export function BillonwayTemplate() {
 
     const handleSubmit = async () => {
         if (selectedDocs.length === 0) {
-            Alert.alert('Lista vacia, por favor selecciona un documento');
+            CustomAlert.show('¡Error!', 'Lista vacia, por favor selecciona un documento');
             return;
         }
         else {
-            Alert.alert('Para continuar por favor indica el documento a entregar');
+            CustomAlert.show('Aviso', 'Para continuar por favor indica el documento a entregar');
             navigation.navigate("BillStateTemplate")
-        
         }
-
         const result = await startRouteService(selectedDocs, user.Token);
         console.log(result);
 
@@ -70,5 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,
+    width: "100%",
+    height: "80%",
   }
 });
