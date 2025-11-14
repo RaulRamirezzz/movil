@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
 import { useEffect } from 'react';
 import { CustomAlert } from '../moleculas/AlertCustom';
 import LottieView from 'lottie-react-native';
+
 
 import {
     View,
@@ -15,6 +16,8 @@ import {
 export function LoadingTemplate() {
     const { user } = useAuth();
     const navigation = useNavigation();
+    const route = useRoute();
+    const fromQR = route.params?.fromQR || false;
 
     useEffect(() => {
       const fetchDocs = async () => {
@@ -28,16 +31,34 @@ export function LoadingTemplate() {
           );
           // Si exiiste un documento en ruta, navega a BillStateTemplate, si no a BillonwayTemplate
           if (docEnRuta) {
-            //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
-            navigation.navigate("BillStateTemplate");
+            if (fromQR) {
+              CustomAlert.show("Aviso", "Ya existe un documento en ruta", () => {
+                navigation.navigate("BillStateTemplate");
+              });
+            }
+            else {
+              navigation.navigate("BillStateTemplate");
+            }
           } else {
-            //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
-            navigation.navigate("BillonwayTemplate")
+            if (fromQR) {
+              CustomAlert.show("Aviso", "Seleccione el siguiente documento a entregar", () => {
+                navigation.navigate("BillonwayTemplate");
+              });
+            }
+            else {
+              navigation.navigate("BillonwayTemplate");
+            }
           }
           // Si no hay documentos en cargados, navega a BillTemplate
         } else {
-          //CustomAlert.show("¡Atención!", "Tu sesión ha expirado 😅");
-          navigation.navigate("BillTemplate")
+            if (fromQR) {
+              CustomAlert.show("Aviso", "Haz finalizado las entregas seleccionadas, selecciona nuevos documentos para tu ruta", () => {
+                navigation.navigate("BillTemplate");
+              });
+            }
+            else {
+              navigation.navigate("BillTemplate");
+            }
         }
       };
 

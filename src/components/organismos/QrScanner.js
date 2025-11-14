@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Alert, Animated, Easing } from "react-native";
+import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { validateQRService } from "../../store/validateQRService";
 import { useAuth } from "../../context/AuthContext";
@@ -65,22 +65,20 @@ export function QrScanner({ onSuccess, consecutivo }) {
           uuid
         ).then((result) => {
           if (result.success) {
-            CustomAlert.show("Éxito", result.descripcion);
-            onSuccess(uuid); // Enviar al template
+            CustomAlert.show("Éxito", result.descripcion, () => {onSuccess(uuid)});
+             // Enviar al template
             console.log(result.descripcion);
           } else {
-            CustomAlert.show("Error", result.descripcion);
-            setScanned(false);
+            CustomAlert.show("Error", result.descripcion, () => {setScanned(false)});
+
           }
         });
         
       } else {
-        Alert.alert("QR no válido", "No se encontró el UUID en el código escaneado.");
-        setScanned(false);
+        CustomAlert.show("QR no válido", "No se encontró el UUID en el código escaneado.", () => {setScanned(false)});
       }
     } catch (error) {
-      Alert.alert("Error", "Ocurrió un problema al procesar el QR.");
-      setScanned(false);
+      CustomAlert.show("Error", "Ocurrió un problema al procesar el QR.", () => {setScanned(false)});
     }
   };
 

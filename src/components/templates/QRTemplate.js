@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Button,
-  Alert,
   Text,
 } from "react-native";
 import { Header } from "../organismos/Header";
@@ -38,7 +37,7 @@ export function QRTemplate() {
     console.log("UUID recibido en QRTemplate:", uuid);
 
     if (!latitude || !longitude) {
-      Alert.alert("Ubicación no disponible", "Por favor, espera un momento.");
+      CustomAlert.show("Ubicación no disponible", "Por favor, espera un momento.");
       return;
     }
 
@@ -46,17 +45,18 @@ export function QRTemplate() {
       setLoading(true);
       const [result] = await Promise.all([
         validateDeliveryService(user.Token, consecutivo, longitude, latitude, fecha),
-        new Promise((resolve) => setTimeout(resolve, 2000)), // ⏱ Espera mínima
+        new Promise((resolve) => setTimeout(resolve, 2000)),
       ]);
 
       if (result.success) {
-        Alert.alert("Éxito", result.descripcion);
-        navigation.navigate("LoadingTemplate");
+        CustomAlert.show("Éxito", result.descripcion, () => {
+          navigation.navigate("LoadingTemplate", { fromQR: true });
+        });
       } else {
-        Alert.alert("Error", result.descripcion);
+        CustomAlert.show("Error", result.descripcion);
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo validar el documento.");
+      CustomAlert.show("Error", "No se pudo validar el documento.");
     } finally {
       setLoading(false);
       consolesLogs();

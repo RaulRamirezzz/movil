@@ -8,15 +8,22 @@ export function CustomAlertProvider({ children }) {
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const [onConfirm, setOnConfirm] = useState(null);
 
-  const show = (title, message) => {
+  const show = (title, message, onConfirmCallback) => {
     setTitle(title);
     setMessage(message);
+    setOnConfirm(() => onConfirmCallback || null);
     setVisible(true);
   };
 
   const hide = () => setVisible(false);
   alertRef = { show, hide };
+
+  const handleConfirm = () => {
+    hide();
+    if (onConfirm) onConfirm();
+  }
 
   return (
     <>
@@ -32,7 +39,7 @@ export function CustomAlertProvider({ children }) {
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.message}>{message}</Text>
 
-            <TouchableOpacity onPress={hide} style={styles.button}>
+            <TouchableOpacity onPress={handleConfirm} style={styles.button}>
               <Text style={styles.buttonText}>Aceptar</Text>
             </TouchableOpacity>
           </View>
@@ -44,8 +51,8 @@ export function CustomAlertProvider({ children }) {
 
 
 export const CustomAlert = {
-  show: (title, message) => {
-    if (alertRef) alertRef.show(title, message);
+  show: (title, message, onConfirm) => {
+    if (alertRef) alertRef.show(title, message, onConfirm);
     else console.warn("Error CustomAlertProvider.");
   },
   hide: () => {

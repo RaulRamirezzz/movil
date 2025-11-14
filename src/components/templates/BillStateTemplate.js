@@ -5,13 +5,15 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
 import { CustomAlert } from '../moleculas/AlertCustom';
-import { View, StyleSheet, Button, Alert, Text } from 'react-native';
+import useLocation from "../../hooks/useLocation";
+import { View, StyleSheet, Button, Text } from 'react-native';
 
 export function BillStateTemplate() {
   const { user } = useAuth();
   const navigation = useNavigation();
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [docs, setDocs] = useState([]);
+  const { latitude, longitude} = useLocation();
 
   useEffect(() => {
     const fetchDocs = async () => {
@@ -19,7 +21,7 @@ export function BillStateTemplate() {
       if (result.success) {
         setDocs(result.documentos);
       } else {
-        Alert.alert('Error', result.descripcion || 'Error al cargar documentos.');
+        CustomAlert.show('Error', result.descripcion || 'Error al cargar documentos.');
       }
     };
     fetchDocs();
@@ -30,7 +32,6 @@ export function BillStateTemplate() {
       CustomAlert.show('Error', 'Por favor selecciona un documento.');
       return;
     }
-
     // Buscar el documento seleccionado en la lista
     const doc = docs.find(d => d.consecutivo === selectedDoc);
 
@@ -40,6 +41,11 @@ export function BillStateTemplate() {
       return;
     }
 
+    // Validar ubicación
+    if (!latitude || !longitude) {
+      CustomAlert.show("Ubicación no disponible", "Por favor, espera un momento.");
+      return;
+    }
     // Si está en ruta, proceder
     console.log('Documento en ruta listo para entrega:', doc.consecutivo);
     navigation.navigate('QRTemplate', { consecutivo: doc.consecutivo });
