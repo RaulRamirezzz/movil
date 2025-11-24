@@ -27,29 +27,33 @@ export function BillStateTemplate() {
     fetchDocs();
   }, [user.Token]);
 
-  const handleEntregar = () => {
-    if (!selectedDoc) {
-      CustomAlert.show('Error', 'Por favor selecciona un documento.');
-      return;
-    }
-    // Buscar el documento seleccionado en la lista
-    const doc = docs.find(d => d.consecutivo === selectedDoc);
+const handleEntregar = () => {
+  console.log(latitude, longitude);
+  if (!selectedDoc) {
+    CustomAlert.show('Error', 'Por favor selecciona un documento.');
+    return;
+  }
 
-    // Validar que esté en ruta
-    if (!doc || doc.estadoDocumento !== 'En ruta') {
-      CustomAlert.show('Error', 'Solo puedes entregar documentos que estén en ruta.');
-      return;
-    }
+  // Buscar el documento seleccionado en la lista
+  const doc = docs.find(d => d.consecutivo === selectedDoc);
 
-    // Validar ubicación
-    if (!latitude || !longitude) {
-      CustomAlert.show("Ubicación no disponible", "Por favor, espera un momento.");
-      return;
-    }
-    // Si está en ruta, proceder
-    console.log('Documento en ruta listo para entrega:', doc.consecutivo);
-    navigation.navigate('QRTemplate', { consecutivo: doc.consecutivo });
-  };
+  // Validar que esté en ruta
+  if (!doc || doc.estadoDocumento !== 'En ruta') {
+    CustomAlert.show('Error', 'Solo puedes entregar documentos que estén en ruta.');
+    return;
+  }
+
+  // Validar ubicación
+  if (!latitude || !longitude) {
+    CustomAlert.show("Ubicación no disponible", "Por favor, activa la ubicación y espera un momento.");
+    return; 
+  }
+
+  // Si está en ruta, proceder
+  console.log('Documento en ruta listo para entrega:', doc.consecutivo);
+  navigation.navigate('QRTemplate', { consecutivo: doc.consecutivo });
+};
+
 
   return (
     <View style={styles.container}>

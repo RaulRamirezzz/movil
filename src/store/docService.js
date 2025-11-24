@@ -1,8 +1,11 @@
-export async function chargeDocs() {
+export async function chargeDocs(token) {
    try {
       const response = await fetch("http://25.52.133.193:1451/api/movil/documentos", {
          method: "GET",
-         headers: { "Content-Type": "application/json" },
+         headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
       });
 
       const data = await response.json();

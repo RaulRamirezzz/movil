@@ -2,16 +2,18 @@ import React, { useEffect, useState, useCallback } from "react";
 import Checkbox from "expo-checkbox";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { chargeDocs } from "../../../store/docService";
+import { useAuth } from "../../../context/AuthContext";
 
 
 export function BillTable({onSelectionChange}) {
   const [selected, setSelected] = useState([]);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const { user } = useAuth();
 
   const fetchDocs = useCallback(async () => {
     try {
-      const result = await chargeDocs();
+      const result = await chargeDocs(user.Token);
       if (result.success) {
         setData(result.documentos);
       } else {

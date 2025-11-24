@@ -20,7 +20,7 @@ export function QRTemplate() {
   const navigation = useNavigation();
   const route = useRoute();
   const consecutivo = route.params?.consecutivo;
-  const { latitude, longitude } = useLocation();
+  const { latitude, longitude} = useLocation();
   const [loading, setLoading] = useState(false);
 
   const consolesLogs = () => {
@@ -35,11 +35,7 @@ export function QRTemplate() {
   const handleQrSuccess = async (uuid) => {
     const fecha = getFormattedDate();
     console.log("UUID recibido en QRTemplate:", uuid);
-
-    if (!latitude || !longitude) {
-      CustomAlert.show("Ubicación no disponible", "Por favor, espera un momento.");
-      return;
-    }
+    consolesLogs();
 
     try {
       setLoading(true);

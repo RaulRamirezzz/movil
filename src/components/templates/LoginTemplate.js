@@ -144,10 +144,11 @@ export function LoginTemplate() {
                         <TextInput
                             style={dynamicStyles.textInput}
                             onChangeText={onChangeText}
-                            placeholder="Número de usuario"
+                            placeholder="Nombre de usuario"
                             placeholderTextColor={isDark ? "#AAAAAA" : "#666666"}
                             value={number}
-                            keyboardType="number-pad" 
+                            autoCapitalize="none"
+                            autoCorrect={false}
                         />
 
                         <TextInput
