@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Checkbox from "expo-checkbox";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, useColorScheme, StyleSheet } from "react-native";
 import { chargeDocs } from "../../../store/docService";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -10,6 +10,42 @@ export function BillTable({onSelectionChange}) {
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: 10,
+      paddingHorizontal: 10,
+    },
+    
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 10,
+      borderBottomWidth: 1,
+      borderColor: isDark ? "#000" : "#ddd",
+    },
+    rowSelected: {
+      backgroundColor: isDark ? "#171719" : "#E3F2FD",
+    },
+    header: {
+      backgroundColor: isDark ? "#1a4381" : "#2196F3",
+      borderRadius: 8,
+    },
+    headerCell: {
+      flex: 1,
+      color: isDark ? "#fff" : "#fff",
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    cell: {
+      flex: 1,
+      textAlign: "center",
+      color: isDark ? "#fff" : "#000",
+    },
+  });
 
   const fetchDocs = useCallback(async () => {
     try {
@@ -78,7 +114,7 @@ export function BillTable({onSelectionChange}) {
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.consecutivo}
-        style={{ maxHeight: 500 }}
+        style={{ maxHeight: 380 }}
         refreshing={refreshing}
         onRefresh={onRefresh}
       />
@@ -86,34 +122,3 @@ export function BillTable({onSelectionChange}) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
-  },
-  
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-  },
-  rowSelected: {
-    backgroundColor: "#E3F2FD",
-  },
-  header: {
-    backgroundColor: "#2196F3",
-    borderRadius: 8,
-  },
-  headerCell: {
-    flex: 1,
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  cell: {
-    flex: 1,
-    textAlign: "center",
-  },
-});

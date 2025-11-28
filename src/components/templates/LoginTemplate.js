@@ -33,6 +33,8 @@ export function LoginTemplate() {
     const logoTranslateY = useRef(new Animated.Value(0)).current; 
 
     useEffect(() => {
+        console.log(colorScheme);
+
         Animated.loop(
             Animated.sequence([
                 Animated.timing(logoTranslateY, {
@@ -101,8 +103,9 @@ export function LoginTemplate() {
         },
         textInput: {
             width: "100%",
+            maxWidth: 400,
             height: 50,
-            borderColor: isDark ? "#BB86FC" : "#6200EE",
+            borderColor: isDark ? "#1a4381" : "#194382",
             borderWidth: 1,
             borderRadius: 10,
             paddingHorizontal: 16,
@@ -112,6 +115,7 @@ export function LoginTemplate() {
         },
         button: {
             marginTop: 16,
+            maxWidth: 400,
             width: "100%",
         }
     });
@@ -119,12 +123,13 @@ export function LoginTemplate() {
     return (
         <KeyboardAvoidingView
             style={dynamicStyles.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            behavior={Platform.OS === "ios" ? "padding" : "padding"}  
             keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-        >
+            >
+
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 20 }}
                     keyboardShouldPersistTaps="handled"
                 >
                     <View style={dynamicStyles.inner}>
@@ -154,7 +159,7 @@ export function LoginTemplate() {
                         <TextInput
                             style={dynamicStyles.textInput}
                             onChangeText={onChangePassword}
-                            placeholder="Password"
+                            placeholder="Contraseña"
                             placeholderTextColor={isDark ? "#AAAAAA" : "#666666"}
                             secureTextEntry
                             value={password}
@@ -165,7 +170,7 @@ export function LoginTemplate() {
                         <View style={dynamicStyles.button}>
                             <Button
                                 title="Login"
-                                color={isDark ? "#BB86FC" : "#6200EE"}
+                                color={isDark ? "#1a4381" : "#194382"}
                                 onPress={logear}
                             />
                         </View>

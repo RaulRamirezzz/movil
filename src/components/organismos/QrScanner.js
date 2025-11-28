@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Animated, Easing } from "react-native";
+import { View, Text, StyleSheet, Animated,useColorScheme, Easing } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { validateQRService } from "../../store/validateQRService";
 import { useAuth } from "../../context/AuthContext";
@@ -11,6 +11,61 @@ export function QrScanner({ onSuccess, consecutivo }) {
   const cameraRef = useRef(null);
   const scanAnim = useRef(new Animated.Value(0)).current;
   const { user } = useAuth();
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const styles = StyleSheet.create({
+    containerQR: {
+      flex: 1,
+      alignItems: "center",
+      
+    },
+    camera: {
+      width: "100%",
+      height: "70%",
+      borderRadius: 20,
+      overflow: "hidden",
+      maxWidth: 500,
+    },
+    overlay: {
+      position: "absolute",
+      width: "100%",
+      height: "70%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    scanLine: {
+      position: "absolute",
+      width: "100%",
+      height: 5,
+      backgroundColor: isDark ? "#1E1E1E" : "#FFFFFF",
+      opacity: 0.8,
+    },
+    text: {
+      position: "absolute",
+      bottom: -30,
+      color: isDark ? "#FFF" : "#000",
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    permiso:{
+      color: isDark ? "#fff" : "#000",
+      fontSize: 20,
+      marginBottom: 8,
+      textAlign: 'center',
+
+    },
+    permisoAllow:{
+      color: 'blue',
+      textDecorationLine: 'underline',
+      fontSize: 18,
+      textAlign: 'center',
+      marginTop: 4,
+      marginBottom: 50,
+
+    },
+  });
 
   // Animación de línea de escaneo
   const startScanAnimation = () => {
@@ -40,8 +95,8 @@ export function QrScanner({ onSuccess, consecutivo }) {
   if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <Text>Se requiere permiso de cámara para escanear códigos.</Text>
-        <Text style={{ color: "blue" }} onPress={requestPermission}>
+        <Text style={styles.permiso}>Se requiere permiso de cámara para escanear.</Text>
+        <Text style={styles.permisoAllow} onPress={requestPermission}>
           Conceder permiso
         </Text>
       </View>
@@ -108,37 +163,4 @@ export function QrScanner({ onSuccess, consecutivo }) {
   );
 }
 
-const styles = StyleSheet.create({
-  containerQR: {
-    flex: 1,
-    alignItems: "center",
-    
-  },
-  camera: {
-    width: "100%",
-    height: "70%",
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  overlay: {
-    position: "absolute",
-    width: "100%",
-    height: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  scanLine: {
-    position: "absolute",
-    width: "100%",
-    height: 5,
-    backgroundColor: "#fff",
-    opacity: 0.8,
-  },
-  text: {
-    position: "absolute",
-    bottom: -30,
-    color: "#000",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
+

@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { loadSelectedDocs } from '../../store/loadSelectedService';
 import { CustomAlert } from '../moleculas/AlertCustom';
 import useLocation from "../../hooks/useLocation";
-import { View, StyleSheet, Button, Text } from 'react-native';
+import { View, StyleSheet, Button,useColorScheme, Text } from 'react-native';
 
 export function BillStateTemplate() {
   const { user } = useAuth();
@@ -14,6 +14,35 @@ export function BillStateTemplate() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [docs, setDocs] = useState([]);
   const { latitude, longitude} = useLocation();
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: isDark ? "#000" : "#f5f5f5",
+    },
+    buttonContainer: {
+      marginTop: 16,
+      width: '40%',
+      alignSelf: 'center',
+    },
+    ContainerTable: {
+      backgroundColor: isDark ? "#0f0f0f" : '#fff',
+      borderRadius: 16,
+      padding: 16,
+      width: "100%",
+      height: "80%",
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: isDark ? "#fff" : "#000",
+    },
+  });
 
   useEffect(() => {
     const fetchDocs = async () => {
@@ -59,35 +88,17 @@ const handleEntregar = () => {
     <View style={styles.container}>
       <Header />
       <View style={styles.ContainerTable}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
-          Documento en ruta
+        <Text style={styles.titleText}>
+          {"Documento en ruta"}
         </Text>
 
         <BillonrouteTable onSelectionChange={setSelectedDoc} />
 
         <View style={styles.buttonContainer}>
-          <Button title="Entregar" onPress={handleEntregar} />
+          <Button title="Entregar" onPress={handleEntregar} color={isDark ? "#1a4381" : "#2196F3"} />
         </View>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  buttonContainer: {
-    marginTop: 16,
-    width: '40%',
-    alignSelf: 'center',
-  },
-  ContainerTable: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
-    width: "100%",
-    height: "80%",
-  },
-});

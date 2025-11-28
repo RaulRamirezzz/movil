@@ -10,6 +10,7 @@ import LottieView from 'lottie-react-native';
 import {
     View,
     StyleSheet,
+    useColorScheme,
     Text,
 } from 'react-native';
 
@@ -18,6 +19,18 @@ export function LoadingTemplate() {
     const navigation = useNavigation();
     const route = useRoute();
     const fromQR = route.params?.fromQR || false;
+
+    const colorScheme = useColorScheme();
+    const isDark = colorScheme === 'dark';
+
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: isDark ? "#000" : "#f5f5f5",
+      },
+    });
 
     useEffect(() => {
       const fetchDocs = async () => {
@@ -77,10 +90,3 @@ export function LoadingTemplate() {
     );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

@@ -11,6 +11,7 @@ import {
     View,
     StyleSheet,
     Button,
+    useColorScheme,
     Text,
 } from 'react-native';
 
@@ -18,6 +19,35 @@ export function BillonwayTemplate() {
     const [selectedDocs, setSelectedDocs] = useState([]);
     const navigation = useNavigation();
     const { user } = useAuth();
+
+    const colorScheme = useColorScheme();
+    const isDark = colorScheme === 'dark';
+
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: isDark ? "#000" : "#f5f5f5",
+      },
+      buttonContainer: {
+        marginTop: 16,
+        width: "40%",
+        alignSelf: "center",
+      },
+      ContainerTable: {
+        backgroundColor: isDark ? "#0f0f0f" : '#fff',
+        borderRadius: 16,
+        padding: 16,
+        width: "100%",
+        height: "80%",
+      },
+      titleText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: isDark ? "#fff" : "#000",
+      },
+    });
 
     const handleSubmit = async () => {
         if (selectedDocs.length === 0) {
@@ -37,8 +67,8 @@ export function BillonwayTemplate() {
         <View style={styles.container}>
             <Header />
             <View style={styles.ContainerTable}>
-              <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
-                              {"Documentos Asignados"}
+              <Text style={styles.titleText}>
+                {"Documentos Asignados"}
               </Text>
               <BillonwayTable onSelectionChange={setSelectedDocs}/> 
               <View style={styles.buttonContainer}>
@@ -47,6 +77,7 @@ export function BillonwayTemplate() {
                     onPress={() => {
                         handleSubmit();
                     }}
+                    color={isDark ? "#1a4381" : "#2196F3"}
                 />
               </View>
             </View>
@@ -54,21 +85,3 @@ export function BillonwayTemplate() {
     );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  buttonContainer: {
-    marginTop: 16,
-    width: "40%",
-    alignSelf: "center",
-  },
-  ContainerTable: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 16,
-    width: "100%",
-    height: "80%",
-  }
-});

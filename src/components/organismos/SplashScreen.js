@@ -51,7 +51,7 @@ export function SplashScreen({ onFinish }) {
     title: {
       fontSize: 28,
       fontWeight: "bold",
-      color: isDark ? "#BB86FC" : "#6200EE",
+      color: isDark ? "#121562" : "#121562",
     },
   });
 

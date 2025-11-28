@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Button,
   Text,
+  useColorScheme,
 } from "react-native";
 import { Header } from "../organismos/Header";
 import { useAuth } from "../../context/AuthContext";
@@ -22,6 +23,41 @@ export function QRTemplate() {
   const consecutivo = route.params?.consecutivo;
   const { latitude, longitude} = useLocation();
   const [loading, setLoading] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: isDark ? "#000" : "#f5f5f5",
+    },
+    ContainerTable: {
+      backgroundColor: isDark ? "#0f0f0f" : '#fff',
+      borderRadius: 16,
+      padding: 16,
+      width: "100%",
+      height: "80%",
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      textAlign: "center",
+      marginBottom: 8,
+      color: isDark ? "#fff" : "#000",
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonContainer: {
+      marginTop: 16,
+      width: '40%',
+      alignSelf: 'center',
+    },
+  });
 
   const consolesLogs = () => {
     const fecha = getFormattedDate();
@@ -75,48 +111,20 @@ export function QRTemplate() {
               loop
               style={{ width: 300, height: 300 }}
             />
-            <Text style={styles.loadingText}>Validando entrega...</Text>
+
           </View>
         ) : (
           <QrScanner onSuccess={handleQrSuccess} consecutivo={consecutivo} />
         )}
 
         {!loading && (
-          <Button title="Regresar" onPress={() => navigation.goBack()} />
+          <View style={styles.buttonContainer}>
+            <Button title="Regresar" maxHei color={isDark ? "#1a4381" : "#2196F3"} onPress={() => navigation.goBack() } />
+          </View>
         )}
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  ContainerTable: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 16,
-    width: "100%",
-    height: "80%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#4F46E5",
-  },
-});
 

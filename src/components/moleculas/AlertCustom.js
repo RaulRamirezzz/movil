@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, Text, TouchableOpacity, useColorScheme, StyleSheet } from "react-native";
 
 
 let alertRef = null;
@@ -9,6 +9,50 @@ export function CustomAlertProvider({ children }) {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [onConfirm, setOnConfirm] = useState(null);
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const styles = StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: isDark ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.5)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    container: {
+      width: "80%",
+      backgroundColor: isDark ? "#000" : "#fff",
+      borderRadius: 20,
+      padding: 20,
+      alignItems: "center",
+      elevation: 5,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      textAlign: "center",
+      color: isDark ? "#fff" : "#000",
+    },
+    message: {
+      fontSize: 16,
+      marginBottom: 20,
+      textAlign: "center",
+      color: isDark ? "#fff" : "#000",
+    },
+    button: {
+      backgroundColor: isDark ? "#1a4381" : "#007AFF",
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      borderRadius: 10,
+    },
+    buttonText: {
+      color: isDark ? "#fff" : "#fff",
+      fontWeight: "bold",
+    },
+  });
+
 
   const show = (title, message, onConfirmCallback) => {
     setTitle(title);
@@ -60,40 +104,3 @@ export const CustomAlert = {
   },
 };
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  container: {
-    width: "80%",
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    elevation: 5,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  message: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});
