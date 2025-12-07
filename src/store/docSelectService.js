@@ -1,25 +1,28 @@
-import mockSeleccion from "../assets/mock/seleccion.json";
+import { fakeBackend } from "../services/fakeBackend";
 
 export async function sendSelectedDocs(consecutivo, token) {
    try {
       // Simular tiempo de red
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // *** Si quieres validar algo, aquí ***
-      if (!Array.isArray(consecutivo) && typeof consecutivo !== "number") {
+      // Validación mínima
+      if (!Array.isArray(consecutivo)) {
          return {
             estatus: -1,
             descripcion: "Formato de consecutivo inválido"
          };
       }
 
-      // Retornar el mock tal cual lo espera tu frontend
+      // 👉 Llamar al fake backend
+      const response = await fakeBackend.cargarDocumentos(consecutivo);
+
+      // 👉 Responder EXACTAMENTE como tu frontend lo espera
       return {
-         estatus: mockSeleccion.estatus,
-         descripcion: mockSeleccion.descripcion
+         estatus: response.estatus,
+         descripcion: response.descripcion
       };
 
    } catch (error) {
-      return { success: false, descripcion: "Error interno offline" };
+      return { estatus: -1, descripcion: "Error interno offline" };
    }
 }

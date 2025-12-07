@@ -1,27 +1,26 @@
-import mockDocumentos from "../assets/mock/documentos.json";
-import KEYS, { getDocs } from "../offline/offlineDB";
+import { fakeBackend } from "../services/fakeBackend";
 
 export async function chargeDocs(token) {
    try {
-      // Simular tiempo de red
+      // Simulación de delay
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // *** OFFLINE MOCK ***
-      const estatus = parseInt(mockDocumentos.estatus);
+      // Llamar al backend local
+      const response = await fakeBackend.getDocumentosPendientes();
 
-      if (estatus === 2) {
+      if (response.estatus === 2) {
          return {
             success: true,
-            descripcion: mockDocumentos.descripcion,
-            documentos: mockDocumentos.documentos || [],
+            descripcion: response.descripcion,
+            documentos: response.documentos || [],
          };
       } else {
          return {
             success: false,
-            descripcion: mockDocumentos.descripcion || "Error en la consulta",
+            descripcion: response.descripcion || "Error en la consulta",
          };
       }
-      
+
    } catch (error) {
       return { success: false, descripcion: "Error interno offline" };
    }

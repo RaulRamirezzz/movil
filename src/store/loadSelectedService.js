@@ -1,22 +1,23 @@
-import mockRuta from "../assets/mock/documentosRuta.json";
+import { fakeBackend } from "../services/fakeBackend";
 
 export async function loadSelectedDocs(token) {
    try {
       // Simular tiempo de red
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      const estatus = parseInt(mockRuta.estatus);
+      // 👉 Llamar al fake backend que devuelve CARGADOS + EN RUTA
+      const response = await fakeBackend.getDocumentosRuta();
 
-      if (estatus === 2) {
+      if (response.estatus === 2) {
          return {
             success: true,
-            descripcion: mockRuta.descripcion,
-            documentos: mockRuta.documentos || [],
+            descripcion: response.descripcion,
+            documentos: response.documentos || [],
          };
       } else {
          return {
             success: false,
-            descripcion: mockRuta.descripcion || "Error en la consulta",
+            descripcion: response.descripcion || "Error en la consulta",
          };
       }
 

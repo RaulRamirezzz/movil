@@ -1,22 +1,24 @@
-import mockIniciarRuta from "../assets/mock/iniciarRuta.json";
+import { fakeBackend } from "../services/fakeBackend";
 
 export async function startRouteService(consecutivo, token) {
    try {
-      // Simula un pequeño delay como si fuera red
+      // Simular un pequeño delay como si fuera red
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      const estatus = parseInt(mockIniciarRuta.estatus);
+      // 👉 Llamar al fake backend
+      const response = await fakeBackend.iniciarRuta(consecutivo);
 
-      if (estatus === 2) {
+      // 👉 Responder EXACTAMENTE en el formato que tus pantallas esperan
+      if (response.estatus === 2) {
          return {
             success: true,
-            descripcion: mockIniciarRuta.descripcion,
+            descripcion: response.descripcion,
             documentos: [], // API real tampoco regresaba documentos
          };
       } else {
          return {
             success: false,
-            descripcion: mockIniciarRuta.descripcion || "Error en la consulta",
+            descripcion: response.descripcion || "Error en la consulta",
          };
       }
 

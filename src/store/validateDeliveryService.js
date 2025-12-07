@@ -1,27 +1,29 @@
-import mockEntrega from "../assets/mock/entregar.json";
+import { fakeBackend } from "../services/fakeBackend";
 
 export async function validateDeliveryService(
-    token, 
-    consecutivo, 
-    latitud, 
-    longitud, 
-    fecha
+   token,
+   consecutivo,
+   latitud,
+   longitud,
+   fecha
 ) {
    try {
-      // Simular delay como si fuera una petición real
+      // Simular delay
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      const estatus = parseInt(mockEntrega.estatus);
+      // 👉 Llamar al backend fake para entregar
+      const response = await fakeBackend.entregarDocumento(consecutivo);
 
-      if (estatus === 2) {
+      // 👉 Convertir a la estructura que tu UI ya usa
+      if (response.estatus === 2) {
          return {
             success: true,
-            descripcion: mockEntrega.descripcion,
+            descripcion: response.descripcion,
          };
       } else {
          return {
             success: false,
-            descripcion: mockEntrega.descripcion || "Error en la consulta",
+            descripcion: response.descripcion || "Error en la consulta",
          };
       }
 

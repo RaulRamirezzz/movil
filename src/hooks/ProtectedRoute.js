@@ -24,6 +24,7 @@ export function ProtectedRoute(){
                     <Stack.Screen name="BillonwayTemplate" component={BillonwayTemplate} />
                     <Stack.Screen name="BillStateTemplate" component={BillStateTemplate} />
                     <Stack.Screen name="QRTemplate" component={QRTemplate} />
+                    <Stack.Screen name="LoadingTemplate" component={LoadingTemplate} />
                 </>
             )}
         </Stack.Navigator>

@@ -1,38 +1,29 @@
 export async function validateQRService(
-    token, 
-    consecutivo, 
-    uuid
+   token,
+   consecutivo,
+   uuid
 ) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/qr", {
-         method: "POST",
-         headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            consecutivo,
-            uuid,
-        }),
-      });
+      // Simular delay
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-      const estatus  = parseInt(data.Estatus);
+      // 👉 UUID válido para TODOS los documentos (como pediste)
+      const UUID_VALIDO = "036c2ae3-b009-4ec1-b507-3990d83d5";
 
-      if (estatus === 2) {
-         // consulta exitoso
+      // 🔍 Validamos el UUID
+      if (uuid === UUID_VALIDO) {
          return {
             success: true,
-            descripcion: data.Descripcion,
+            descripcion: "Folio encontrado",
          };
       } else {
-         // error de consulta
          return {
             success: false,
-            descripcion: data.Descripcion || "Error en la consulta",
+            descripcion: "No se encontró el folio timbrado",
          };
       }
+
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return { success: false, descripcion: "Error interno offline" };
    }
 }
