@@ -4,15 +4,13 @@
     "slug": "movil",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "../movil/src/assets/zegnal.png",
+    "icon": "./assets/zegnalLogo.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "splash": {
-      "image": "../movil/src/assets/zegnal.png",
+      "image": "./assets/zegnalLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -20,21 +18,24 @@
         "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicación para mostrarte tu posición actual."
       }
     },
-
     "android": {
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/zegnalLogo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "CAMERA"
-      ]
+        "CAMERA",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.readyh.movil"
     },
-
     "plugins": [
       [
         "expo-location",
@@ -49,9 +50,13 @@
         }
       ]
     ],
-
     "web": {
-      "favicon": "../movil/src/assets/zegnal.png"
+      "favicon": "./assets/zegnalLogo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "08820d9e-1327-4401-802b-cb232dd748df"
+      }
     }
   }
 }
