@@ -1,0 +1,36 @@
+{
+  "estatus": 2,
+  "descripcion": "Listado exitoso",
+  "documentos": [
+    {
+      "consecutivo": "5",
+      "numeroDocumento": "005",
+      "codigoCliente": "C23900",
+      "nombreCliente": "Parameter Technology",
+      "tipoDocumento": "Factura",
+      "fechaDocumento": "09-09-25",
+      "fechaEntrega": "09-09-25",
+      "diasAtraso": "9"
+    },
+    {
+      "consecutivo": "4",
+      "numeroDocumento": "4",
+      "codigoCliente": "C23900",
+      "nombreCliente": "Parameter Technology",
+      "tipoDocumento": "Factura",
+      "fechaDocumento": "09-09-25",
+      "fechaEntrega": "09-09-25",
+      "diasAtraso": "9"
+    },
+    {
+      "consecutivo": "3",
+      "numeroDocumento": "3",
+      "codigoCliente": "C23900",
+      "nombreCliente": "Parameter Technology",
+      "tipoDocumento": "Factura",
+      "fechaDocumento": "09-09-25",
+      "fechaEntrega": "09-09-25",
+      "diasAtraso": "9"
+    }
+  ]
+}

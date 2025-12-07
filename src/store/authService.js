@@ -1,34 +1,35 @@
+import mockLogin from "../assets/mock/login.json";
+
 export async function loginAuth(usuario, password) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/login", {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({
-            usuario,
-            contraseña: password
-         }),
-      });
+      // Simular tiempo de red (opcional)
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-      const Estatus  = parseInt(data.Estatus);
+      // *** VALIDACIÓN OFFLINE ***
+      // Puedes cambiar esto según los usuarios que quieras permitir
+      const usuarioValido = mockLogin.nombre.split(" ")[0].toLowerCase();
+      
+      if (usuario.toLowerCase() === usuarioValido && password !== "") {
 
-      if (Estatus === 2) {
-         // login exitoso
          return {
             success: true,
-            Token: data.Token,
-            Rol: data.Rol,
-            Nombre: data.Nombre,
-            Descripcion: data.Descripcion,
-         };
-      } else {
-         // error de login
-         return {
-            success: false,
-            Descripcion: data.Descripcion || "Error en las credenciales",
+            Token: mockLogin.token,
+            Rol: mockLogin.rol,
+            Nombre: mockLogin.nombre,
+            Descripcion: mockLogin.descripcion,
          };
       }
+
+      // ❌ Credenciales incorrectas (mismo comportamiento que tu API)
+      return {
+         success: false,
+         Descripcion: "Credenciales incorrectas",
+      };
+
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return {
+         success: false,
+         Descripcion: "Error interno offline",
+      };
    }
 }

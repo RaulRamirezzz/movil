@@ -20,7 +20,6 @@ export function ProtectedRoute(){
                 <Stack.Screen name="Login" component={LoginTemplate} />
             ) : (
                 <>
-                    <Stack.Screen name="LoadingTemplate" component={LoadingTemplate} />
                     <Stack.Screen name="BillTemplate" component={BillTemplate} />
                     <Stack.Screen name="BillonwayTemplate" component={BillonwayTemplate} />
                     <Stack.Screen name="BillStateTemplate" component={BillStateTemplate} />

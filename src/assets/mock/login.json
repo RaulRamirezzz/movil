@@ -1,0 +1,7 @@
+{
+  "estatus": 2,
+  "descripcion": "Login exitoso",
+  "token": "TOKEN_LOCAL_123",
+  "rol": "operador",
+  "nombre": "Mariano Mendoza"
+}

@@ -1,32 +1,26 @@
+import mockIniciarRuta from "../assets/mock/iniciarRuta.json";
+
 export async function startRouteService(consecutivo, token) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/iniciar-ruta", {
-         method: "POST",
-         headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ consecutivo }),
-      });
+      // Simula un pequeño delay como si fuera red
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-      const estatus  = parseInt(data.Estatus);
+      const estatus = parseInt(mockIniciarRuta.estatus);
 
       if (estatus === 2) {
-         // consulta exitoso
          return {
             success: true,
-            descripcion: data.Descripcion,
-            documentos: data.Documentos || [],
+            descripcion: mockIniciarRuta.descripcion,
+            documentos: [], // API real tampoco regresaba documentos
          };
       } else {
-         // error de consulta
          return {
             success: false,
-            descripcion: data.Descripcion || "Error en la consulta",
+            descripcion: mockIniciarRuta.descripcion || "Error en la consulta",
          };
       }
+
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return { success: false, descripcion: "Error interno offline" };
    }
 }

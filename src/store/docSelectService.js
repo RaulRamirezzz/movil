@@ -1,18 +1,25 @@
+import mockSeleccion from "../assets/mock/seleccion.json";
+
 export async function sendSelectedDocs(consecutivo, token) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/seleccion", {
-         method: "POST",
-         headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ consecutivo }),
-      });
+      // Simular tiempo de red
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-      return data;
+      // *** Si quieres validar algo, aquí ***
+      if (!Array.isArray(consecutivo) && typeof consecutivo !== "number") {
+         return {
+            estatus: -1,
+            descripcion: "Formato de consecutivo inválido"
+         };
+      }
+
+      // Retornar el mock tal cual lo espera tu frontend
+      return {
+         estatus: mockSeleccion.estatus,
+         descripcion: mockSeleccion.descripcion
+      };
 
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return { success: false, descripcion: "Error interno offline" };
    }
 }

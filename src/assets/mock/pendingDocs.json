@@ -1,0 +1,24 @@
+{
+  "documentos": [
+    {
+      "consecutivo": "5",
+      "numeroDocumento": "005",
+      "codigoCliente": "C23900",
+      "nombreCliente": "Parameter Technology",
+      "tipoDocumento": "Factura",
+      "fechaDocumento": "09-09-25",
+      "fechaEntrega": "09-09-25",
+      "diasAtraso": "9"
+    },
+    {
+      "consecutivo": "6",
+      "numeroDocumento": "006",
+      "codigoCliente": "C24000",
+      "nombreCliente": "Industrial Tech SA",
+      "tipoDocumento": "Traslado",
+      "fechaDocumento": "09-09-25",
+      "fechaEntrega": "10-09-25",
+      "diasAtraso": "0"
+    }
+  ]
+}

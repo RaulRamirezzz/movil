@@ -1,32 +1,28 @@
+import mockDocumentos from "../assets/mock/documentos.json";
+import KEYS, { getDocs } from "../offline/offlineDB";
+
 export async function chargeDocs(token) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos", {
-         method: "GET",
-         headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-      });
+      // Simular tiempo de red
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-       
-      const estatus  = parseInt(data.Estatus);
+      // *** OFFLINE MOCK ***
+      const estatus = parseInt(mockDocumentos.estatus);
 
       if (estatus === 2) {
-         // consulta exitoso
          return {
             success: true,
-            descripcion: data.Descripcion,
-            documentos: data.Documentos || [],
+            descripcion: mockDocumentos.descripcion,
+            documentos: mockDocumentos.documentos || [],
          };
       } else {
-         // error de consulta
          return {
             success: false,
-            descripcion: data.Descripcion || "Error en la consulta",
+            descripcion: mockDocumentos.descripcion || "Error en la consulta",
          };
       }
+      
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return { success: false, descripcion: "Error interno offline" };
    }
 }

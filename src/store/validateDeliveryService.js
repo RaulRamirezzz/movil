@@ -1,3 +1,5 @@
+import mockEntrega from "../assets/mock/entregar.json";
+
 export async function validateDeliveryService(
     token, 
     consecutivo, 
@@ -6,37 +8,24 @@ export async function validateDeliveryService(
     fecha
 ) {
    try {
-      const response = await fetch("http://25.52.133.193:1451/api/movil/documentos/entregar", {
-         method: "POST",
-         headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            consecutivo,
-            longitud,
-            latitud,
-            fecha
-        }),
-      });
+      // Simular delay como si fuera una petición real
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const data = await response.json();
-      const estatus  = parseInt(data.Estatus);
+      const estatus = parseInt(mockEntrega.estatus);
 
       if (estatus === 2) {
-         // consulta exitoso
          return {
             success: true,
-            descripcion: data.Descripcion,
+            descripcion: mockEntrega.descripcion,
          };
       } else {
-         // error de consulta
          return {
             success: false,
-            descripcion: data.Descripcion || "Error en la consulta",
+            descripcion: mockEntrega.descripcion || "Error en la consulta",
          };
       }
+
    } catch (error) {
-      return { success: false, Descripcion: "Error de conexión con el servidor" };
+      return { success: false, descripcion: "Error interno offline" };
    }
 }

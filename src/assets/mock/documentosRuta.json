@@ -1,0 +1,28 @@
+{
+  "estatus": 2,
+  "descripcion": "Listado exitoso",
+  "documentos": [
+    {
+      "consecutivo": "1",
+      "numeroDocumento": "001",
+      "codigoCliente": "C20000",
+      "nombreCliente": "Norm Thompson",
+      "tipoDocumento": "Factura",
+      "estadoDocumento": "Cargado",
+      "fechaDocumento": "01-09-25",
+      "fechaEntrega": "05-09-25",
+      "diasAtraso": "4"
+    },
+    {
+      "consecutivo": "2",
+      "numeroDocumento": "002",
+      "codigoCliente": "C30000",
+      "nombreCliente": "Microchips",
+      "tipoDocumento": "Factura",
+      "estadoDocumento": "En ruta",
+      "fechaDocumento": "25-08-25",
+      "fechaEntrega": "25-08-25",
+      "diasAtraso": "0"
+    }
+  ]
+}
